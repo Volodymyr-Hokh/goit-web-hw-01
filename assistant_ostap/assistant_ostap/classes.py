@@ -38,9 +38,7 @@ class Field:
         if self.__class__ == other.__class__:
             return self._value == other.value
         return False
-
-    # Додав магічний метод __hash__ тому, що діти класу Field
-    # можуть бути елементами множини(set)
+    
     def __hash__(self):
         return hash(self._value)
 
@@ -72,9 +70,6 @@ class Phone(Field):
     def is_valid_phone(phone):
         if phone == '':
             return True
-        # Валідація номеру телефону відбувається за
-        # допомогою регулярнго виразу, що означає: необов'язково +, потім цифра від 1 до 9
-        # та 11 цифр від 0 до 9. Тобто валідними будуть такі номери +123456987456 та 123456987456,
         match = re.search(r"^\+?[1-9][\d]{11}$", phone)
         return bool(match)
 
@@ -95,8 +90,6 @@ class Birthday(Field):
 
     @staticmethod
     def is_valid_date(date):
-        # Валідація дня народження є значно простішою, ніж номеру телефону.
-        # Якщо ввід користувача перетворюється у об'єкт datetime то дата валідна
         try:
             if date == '':
                 return True
@@ -173,8 +166,6 @@ class Record:
         self.email = email
 
     def __str__(self):
-        # Рядкове представлення Record у форматі
-        # Володя: +123456987456, 23456987456. Birthday: 21.01.1978
         phones = ", ".join([str(phone) for phone in self.phones])
         birthday = f"Birthday: {self.birthday}" if self.birthday.value else "Birthday:"
         address_str = f"Address: {self.address}" if self.address else ""
@@ -189,14 +180,10 @@ class Record:
             return f"User {self.name.value} already has {phone} phone number."
         else:
             self.phones.append(phone)
-        # Список телефонів приводиться до множини для того, щоб виключити можливість
-        # повторення номеру телефону
         self.phones = list(set(self.phones))
         return f"Phone number {phone} is added successfully for user {self.name.value}."
 
     def change_phone(self, old_number: Phone, new_number: Phone):
-        # У списку телефонів знаходиться індекс старого номера та змінює
-        # old_number на new_number
         if old_number not in self.phones:
             return f"Number {old_number} not found."
         else:
@@ -220,8 +207,6 @@ class Record:
 
         today = date.today()
         birthday = birthday.replace(year=today.year)
-        # Якщо цього року вже був день народження, кількість днів рахується до наступного
-        # дня народження
         if birthday < today:
             birthday = birthday.replace(year=today.year+1)
         result = (birthday - today).days
@@ -331,9 +316,6 @@ class AddressBook(UserDict):
             }
         with open(filename, "w", encoding="utf-8") as file:
             json.dump(json_data, file, indent=4, ensure_ascii=False)
-
-    # Методи __iter__ та __next__ перетворюють елземпляри AddressBook на
-    # ітератори, щоб користувачам показувати одночасно self.page_size записів
 
     def __iter__(self):
         self.current_page = 1

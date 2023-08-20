@@ -18,7 +18,6 @@ class Note:
 
     @property
     def keywords(self) -> list:
-        # Ключовим вважається слово, перед яким у тексті є знак "#"
         pattern = r"#(\w+)"
         tags = re.findall(pattern, self.text.lower())
         return tags
