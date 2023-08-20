@@ -4,9 +4,8 @@ import re
 from fuzzywuzzy import fuzz, process
 import readline
 
-import assistant_ostap.assistant_ostap.classes as classes
-from assistant_ostap.assistant_ostap.handlers import commands
-from assistant_ostap.assistant_ostap.notes import NoteBook
+from assistant_ostap.handlers import commands
+from assistant_ostap.ui import ConsoleInterface
 
 
 def completer(text, state):
@@ -49,22 +48,14 @@ def parse_command(user_input: str):
 def main():
     readline.set_completer(completer)
     readline.parse_and_bind("tab: complete")
-    print("How can I help you?")
     while True:
+        ui = ConsoleInterface()
         user_input = input("Enter command: ")
-        result = parse_command(user_input)
-
-        if result:
-            if isinstance(result, classes.AddressBook) or isinstance(result, NoteBook):
-                for page in result:
-                    commands["clear"]()
-                    print("\n".join([str(i) for i in page]))
-                    user_input = input(
-                        "Press 'q' to quit. Press any key to see the next page: ")
-                    if user_input.lower() == "q":
-                        break
-            else:
-                print(result)
+        if "help" in user_input:
+            ui.show_commands()
+        else:
+            result = parse_command(user_input)
+            ui.show_contacts(result)
 
 
 if __name__ == "__main__":

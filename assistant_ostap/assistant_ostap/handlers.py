@@ -1,11 +1,10 @@
 import os
 import platform
 import sys
-from rich.console import Console
-from rich.table import Table
-import assistant_ostap.assistant_ostap.classes as classes
-from assistant_ostap.assistant_ostap.notes import NoteBook
-from assistant_ostap.assistant_ostap.clean import main
+
+import assistant_ostap.classes as classes
+from assistant_ostap.notes import NoteBook
+from assistant_ostap.clean import main
 
 
 commands = {}
@@ -42,13 +41,7 @@ def input_error(func):
 @input_error
 def help_command(*args):
     """Show all commands available."""
-    table = Table(title="Commands",style="magenta",show_lines=True)
-    table.add_column('Comand')
-    table.add_column('Description')
-    for command, func in commands.items():
-        table.add_row(command, func.__doc__)
-    console = Console()
-    console.print(table)
+    pass
 
 
 @set_commands("add record")
